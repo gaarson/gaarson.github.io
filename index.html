@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Git Flow presentation</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="shower/themes/material/styles/styles.css">
+    <style>
+        .shower {
+            --slide-ratio: calc(16 / 9);
+        }
+        .master {
+          color: #60e1f7;
+          background-color: currentColor;
+        }
+        .hotfix {
+          color: #ef6467;
+          background-color: currentColor;
+        }
+        .release {
+          color: #6fc239;
+          background-color: currentColor;
+        }
+        .develop {
+          color: #fbe34b;
+          background-color: currentColor;
+        }
+        .feature {
+          color: #f077be;
+          background-color: currentColor;
+        }
+
+        .branches {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          width: 100%;
+        }
+        .branch {
+          position: relative;
+          display: flex;
+          margin-bottom: 55px;
+          width: 100%;
+          height: 3px;
+        }
+
+        .title {
+          position: absolute;
+          top: 5px;
+          font-size: 15px;
+        }
+
+        .empty { 
+          position: relative;
+          top: -6px;
+          margin: 0 33px;
+        }
+
+        .commit {
+          position: relative;
+          top: -6px;
+          margin: 0 25px;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+        }
+        .commit p {
+          transition: 2s;
+          font-size: 16px;
+          white-space: nowrap;
+          margin-bottom: 0;
+          visibility: hidden;
+          width: 80px;
+          background-color: black;
+          color: #fff;
+          text-align: center;
+          padding: 5px;
+          border-radius: 2px;
+         
+          position: absolute;
+          bottom: 21px;
+          left: -35px;
+          z-index: 1;
+        }
+        .commit:hover p {
+          visibility: visible;
+        }
+        .hide {
+          background-color: #fff;
+          margin: 0;
+          padding: 0 25px;
+          border-radius: 0px;
+          width: 17px;
+        }
+        .last {
+          background-color: #fff;
+          margin: 0;
+          border-radius: 0px;
+        }
+
+        .arrow-up:before {
+          content: "\27F6";
+          z-index: 2;
+          font-size: 85px;
+          position: absolute;
+          transform: rotate(-43deg);
+          top: -105px;
+          left: -36px;
+          height: 116px;
+        }
+        .arrow-down:after {
+          content: "\27F6";
+          z-index: 2;
+          font-size: 85px;
+          position: absolute;
+          transform: rotate(43deg);
+          top: -56px;
+          left: 23px;
+          height: 113px;
+        }
+
+        .right:after {
+          left: 44px;
+        }
+        .right:before {
+          left: -10px;
+        }
+
+        @keyframes move_line {
+          from {
+            width: 0%;
+          }
+
+          to {
+            width: 100%;
+          }
+        }
+
+    </style>
+</head>
+<body class="shower list">
+
+    <section class="slide" id="cover">
+        <h2>Презентация на тему Git-Flow</h2>
+        <figure>
+            <img class="cover" src="pictures/cover.jpg" alt="Hands on the orange typewriter in a park">
+        </figure>
+        <style>
+            #cover h2 {
+                margin: -7px 0 0;
+                color: black;
+                background-color: white;
+                text-align: center;
+                font-size: 50px;
+            }
+        </style>
+    </section>
+
+    <section class="slide">
+        <h2>Git Flow</h2>
+        <p style="font-size: 36px">Это методология ветвления и слияния, сильно популяризированная заметкой 2010 года под названием «A Successful Git branching model» за авторством Vincent Driessen</p>
+    </section>
+
+    <section class="slide">
+      <h2>10 лет спустя:</h2>
+      <figure style="margin-top: 100px">
+          <blockquote>
+              <p>Git-flow приобрела настолько высокую популярность у разработчиков, что ее начали рассматривать как своего рода стандарт — но, к сожалению, и как некую догму или панацею.</p>
+          </blockquote>
+          <figcaption>Vincent Driessen</figcaption>
+      </figure>
+    </section>
+
+    <section class="slide">
+        <h2>Для чего же он всё же подходит?</h2>
+        <ol style="font-size: 30px; margin-top: 100px;">
+            <li class="next">При предсказуемом, долгосрочном цикле релизов</li>
+            <li class="next">При параллельной работе над несколькими релизами</li>
+            <li class="next">Если у вас жесткое версионирование</li>
+        </ol>
+    </section>
+
+    <section class="slide">
+        <h2>Основные ветки:</h2>
+
+        <div class="branches"> 
+          <div class="next branch master">
+            <p class="title">Master</p>
+            <div class="arrow-down commit master"><p>Initial prod</p></div> 
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit master"><p>new prod</p></div>
+          </div>
+
+          <div class="next branch develop">
+            <p class="title">Develop</p>
+            <div class="commit"></div>
+            <div class="commit develop"></div>
+            <div class="commit develop"></div>
+            <div class="arrow-up commit develop"><p>commit #3</p></div>
+          </div>
+        </div>
+
+        <ul style="font-size: 18px">
+            <li class="next">Код в ветке master всегда production-ready</li>
+            <li class="next">Код в ветке develop должен содержать все новые фичи в рабочем состоянии</li>
+            <li class="next">Develop ветка служит "интеграционной" из нее код береётся для автоматических билдов</li>
+            <li class="next">Один коммит в мастер - НОВЫЙ РЕЛИЗ!</li>
+        </ul>
+        
+    </section>
+
+    <section class="slide">
+        <h2>Вспомогательные ветки:</h2>
+        <div class="branches"> 
+          <div class="next branch hotfix">
+            <p class="title">Hotfix</p>
+          </div>
+          <div class="next branch feature">
+            <p class="title">Feature</p>
+          </div>
+          <div class="next branch release">
+            <p class="title">Release</p>
+          </div>
+        </div>
+
+        <ul style="font-size: 18px">
+            <li class="next">Служат для распараллеливания работы в команде</li>
+            <li class="next">Эти ветки имеют короткий срок жизни</li>
+        </ul>
+
+    </section>
+
+    <section class="slide">
+        <h2>Функциональные ветки:</h2>
+        <div class="branches"> 
+          <div class="next branch develop">
+            <p class="title">Develop</p>
+            <div class="arrow-down commit develop"></div>
+            <div class="arrow-down commit develop"></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit develop"></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit develop"></div>
+          </div>
+          <div class="next branch feature">
+            <p class="title">Feature/One</p>
+            <div class="commit hide"></div>
+            <div class="arrow-down right commit develop hide"></div>
+            <div class="commit feature"></div>
+            <div class="arrow-up commit feature"></div>
+            <div class="commit hide"></div>
+            <div class="commit hide"></div>
+            <div class="arrow-up right commit hide feature"></div>
+            <div style="padding-right: 40%;" class="commit last"></div>
+          </div>
+          <div class="next branch feature">
+            <p class="title">Feature/Two</p>
+            <div class="commit hide"></div>
+            <div class="commit hide"></div>
+            <div class="commit feature"></div>
+            <div class="commit feature"></div>
+            <div class="commit feature"></div>
+            <div class="arrow-up commit feature"></div>
+            <div style="padding-right: 48%;" class="commit last"></div>
+          </div>
+        </div>
+
+        <ul style="font-size: 18px">
+            <li class="next">Пораждаются от Develop, сливаются в Develop</li>
+            <li class="next">Можете предерживаться любых типов именований</li>
+            <li class="next">Пуши в эти ветки могут проверяться с помощью CI</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <h2>Релизные ветки:</h2>
+
+        <div class="branches"> 
+          <div class="next branch master">
+            <p class="title">Master</p>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit master"><p>merge 1.2</p></div>
+          </div>
+          <div class="next branch release">
+            <p class="title">Release/1.2</p>
+            <div class="commit hide"></div>
+            <div class="commit release"><p>release 1.2</p></div>
+            <div class="commit release"><p>some fix</p></div>
+            <div class="arrow-up arrow-down commit release"><p>fix 2</p></div>
+            <div style="padding-right: 65%;" class="commit last"></div>
+          </div>
+          <div class="next branch develop">
+            <p class="title">Develop</p>
+            <div class="arrow-up commit develop"><p>com #420</p></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit develop"><p>merge 1.2</p></div>
+          </div>
+        </div>
+
+        <ul style="font-size: 18px">
+            <li class="next">Пораждаются от Develop, сливаются в Master и Develop</li>
+            <li class="next">После вливания над ней можно продолжать работу, сглаживая углы</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <h2>Исправленческие ветки:</h2>
+
+        <div class="branches"> 
+          <div class="next branch master">
+            <p class="title">Master</p>
+            <div class="arrow-down commit master"><p>release 1.2</p></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit master"><p>merge fix</p></div>
+          </div>
+          <div class="next branch hotfix">
+            <p class="title">Hotfix/1.2</p>
+            <div class="commit hide"></div>
+            <div class="commit hotfix"></div>
+            <div class="commit hotfix"><p>fix 1</p></div>
+            <div class="arrow-up arrow-down commit hotfix"><p>fix 2</p></div>
+            <div style="padding-right: 65%;" class="commit last"></div>
+          </div>
+          <div class="next branch develop">
+            <p class="title">Develop</p>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+            <div class="commit develop"><p>merge fix</p></div>
+          </div>
+        </div>
+
+        <ul style="font-size: 18px">
+            <li class="next">Пораждаются от Master, сливаются в Master и Develop</li>
+            <li class="next">Необходимы для немедленных и критичных исправлений продукта</li>
+            <li class="next">Не мешает работе команды над Develop</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <h2>Недостатки:</h2>
+
+        <ol style="font-size: 18px">
+            <li class="next">Git Flow плохо применим c rebase</li>
+            <li class="next">Git Flow усложняет continuous delivery</li>
+            <li class="next">Git Flow увеличивает вероятность merge конфликтов (спорно)</li>
+        </ol>
+    </section>
+
+    <section class="slide">
+        <h2>Какие есть варианты помимо?</h2>
+
+        <ul style="font-size: 18px">
+          <li class="next"><a href="https://guides.github.com/introduction/flow/">GitHub Flow</a></li>
+          <li class="next"><a href="https://about.gitlab.com/blog/2014/09/29/gitlab-flow/">GitLab Flow</a></li>
+          <li class="next"><a href="https://www.endoflineblog.com/oneflow-a-git-branching-model-and-workflow">One Flow</a></li>
+          <li class="next"><a href="https://paulhammant.com/2013/04/05/what-is-trunk-based-development/">Trunk-Based Development</a></li>
+        </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Коротко о git rebase:</h2>
+      <figure style="margin-top: 100px">
+          <blockquote>
+              <p>Применить коммиты к другой ветке (Reapply commits on top of another base tip)</p>
+          </blockquote>
+          <figcaption><a href="https://git-scm.com/docs/git-rebase/en">Документация git</a></figcaption>
+      </figure>
+
+    </section>
+
+    <section class="slide">
+      <h2>До rebase:</h2>
+      
+        <div style="margin-top: 100px;" class="branches"> 
+          <div class="next branch master">
+            <p class="title">Master</p>
+            <div class="commit master"><p>A</p></div>
+            <div class="arrow-down commit master"><p>B</p></div>
+            <div class="commit master"><p>C</p></div>
+            <div class="commit master"><p>D</p></div>
+          </div>
+          <div class="next branch feature">
+            <p class="title">Feature</p>
+            <div class="commit hide"></div>
+            <div class="commit hide"></div>
+            <div class="commit feature"><p>E</p></div>
+            <div class="commit feature"><p>F</p></div>
+            <div class="commit"></div>
+            <div class="commit"></div>
+          </div>
+        </div>
+
+    </section>
+
+    <section class="slide">
+      <h2>После rebase:</h2>
+
+        <div style="margin-top: 100px;" class="branches"> 
+          <div class="next branch master">
+            <p class="title">Master</p>
+            <div class="commit master"><p>A</p></div>
+            <div class="commit master"><p>B</p></div>
+            <div class="commit master"><p>C</p></div>
+            <div class="arrow-down commit master"><p>D</p></div>
+          </div>
+          <div class="next branch feature">
+            <p class="title">Feature</p>
+            <div class="commit hide"></div>
+            <div class="commit hide"></div>
+            <div class="commit hide"></div>
+            <div class="commit hide"></div>
+            <div class="commit feature"><p>E</p></div>
+            <div class="commit feature"><p>F</p></div>
+          </div>
+        </div>
+      
+    </section>
+
+    <section class="slide">
+      <h2>Правило rebase:</h2>
+
+      <p style="margin-top: 100px;"><strong>НИКОГДА</strong> не выполняйте rebase расшаренной ветки!</p>
+    </section>
+
+    <section class="slide">
+      <h2 style="margin: auto">Пожалуй, всё</h2>
+    </section>
+
+    <div class="progress"></div>
+
+    <script src="shower/shower.min.js"></script>
+    <script>
+      const branches = document.querySelectorAll('.branch');
+      window.addEventListener('keydown', (e) => {
+        if (e.keyCode === 39) {
+          branches.forEach((branch) => {
+            if (getComputedStyle(branch).visibility === 'visible') {
+              branch.style =  'animation: 3s linear move_line';
+            }
+          });
+        }
+      });
+    </script>
+    <!-- Copyright © 3000 Yours Truly, Famous Inc. -->
+
+</body>
+</html>
